@@ -29,6 +29,10 @@ public class MainActivity extends Activity {
     private Handler mHandler = new Handler();
 
 
+    // UUID for my custom accelerometer app
+    private UUID accelUUID = UUID.fromString("3abfe0f2-8bdd-4a64-ab53-001ae2c26cf8");
+
+
 
 
     @Override
@@ -48,40 +52,40 @@ public class MainActivity extends Activity {
         Toast.makeText(this, "Pebble " + (isConnected ? "is" : "is not") + " connected!", Toast.LENGTH_SHORT).show();
 
 
-        // Push a notification
-        final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
-
-        final Map data = new HashMap();
-        data.put("title", "Test Message");
-        data.put("body", "How do I have WiFi?");
-        final JSONObject jsonData = new JSONObject(data);
-        final String notificationData = new JSONArray().put(jsonData).toString();
-
-        i.putExtra("messageType", "PEBBLE_ALERT");
-        i.putExtra("sender", "PebbleKit Android");
-        i.putExtra("notificationData", notificationData);
-        sendBroadcast(i);
+//        // Push a notification
+//        final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
+//
+//        final Map data = new HashMap();
+//        data.put("title", "Test Message");
+//        data.put("body", "How do I have WiFi?");
+//        final JSONObject jsonData = new JSONObject(data);
+//        final String notificationData = new JSONArray().put(jsonData).toString();
+//
+//        i.putExtra("messageType", "PEBBLE_ALERT");
+//        i.putExtra("sender", "PebbleKit Android");
+//        i.putExtra("notificationData", notificationData);
+//        sendBroadcast(i);
 
 
         // Launch the sports app
-        PebbleKit.startAppOnPebble(this, Constants.SPORTS_UUID);
-        
+        PebbleKit.startAppOnPebble(this, accelUUID);
+
 
         Toast.makeText(this, "Launching...", Toast.LENGTH_SHORT).show();
-
-// Send data 5s after launch
-        mHandler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                // Send a time and distance to the sports app
-                PebbleDictionary outgoing = new PebbleDictionary();
-                outgoing.addString(Constants.SPORTS_TIME_KEY, "4:20");
-                outgoing.addString(Constants.SPORTS_DISTANCE_KEY, "=3");
-                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.SPORTS_UUID, outgoing);
-            }
-
-        }, 5000L);
+//
+//// Send data 5s after launch
+//        mHandler.postDelayed(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                // Send a time and distance to the sports app
+//                PebbleDictionary outgoing = new PebbleDictionary();
+//                outgoing.addString(Constants.SPORTS_TIME_KEY, "4:20");
+//                outgoing.addString(Constants.SPORTS_DISTANCE_KEY, "=3");
+//                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.SPORTS_UUID, outgoing);
+//            }
+//
+//        }, 5000L);
 
 
 
