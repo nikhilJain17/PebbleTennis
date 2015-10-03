@@ -18,12 +18,16 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class MainActivity extends Activity {
 
+    // receives data
     private PebbleKit.PebbleDataReceiver mReceiver;
+    // sends data
     private Handler mHandler = new Handler();
+
 
 
 
@@ -49,7 +53,7 @@ public class MainActivity extends Activity {
 
         final Map data = new HashMap();
         data.put("title", "Test Message");
-        data.put("body", "Whoever said nothing was impossible never tried to slam a revolving door.");
+        data.put("body", "How do I have WiFi?");
         final JSONObject jsonData = new JSONObject(data);
         final String notificationData = new JSONArray().put(jsonData).toString();
 
@@ -61,6 +65,7 @@ public class MainActivity extends Activity {
 
         // Launch the sports app
         PebbleKit.startAppOnPebble(this, Constants.SPORTS_UUID);
+        
 
         Toast.makeText(this, "Launching...", Toast.LENGTH_SHORT).show();
 
@@ -77,6 +82,10 @@ public class MainActivity extends Activity {
             }
 
         }, 5000L);
+
+
+
+
 
 
 
