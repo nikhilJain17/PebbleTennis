@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -22,6 +23,8 @@ import java.util.Map;
 public class MainActivity extends Activity {
 
     private PebbleKit.PebbleDataReceiver mReceiver;
+    private Handler mHandler = new Handler();
+
 
 
     @Override
@@ -41,7 +44,6 @@ public class MainActivity extends Activity {
         Toast.makeText(this, "Pebble " + (isConnected ? "is" : "is not") + " connected!", Toast.LENGTH_SHORT).show();
 
 
-        // send some bootycalls
         // Push a notification
         final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
 
@@ -55,6 +57,27 @@ public class MainActivity extends Activity {
         i.putExtra("sender", "PebbleKit Android");
         i.putExtra("notificationData", notificationData);
         sendBroadcast(i);
+
+
+        // Launch the sports app
+        PebbleKit.startAppOnPebble(this, Constants.SPORTS_UUID);
+
+        Toast.makeText(this, "Launching...", Toast.LENGTH_SHORT).show();
+
+// Send data 5s after launch
+        mHandler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // Send a time and distance to the sports app
+                PebbleDictionary outgoing = new PebbleDictionary();
+                outgoing.addString(Constants.SPORTS_TIME_KEY, "4:20");
+                outgoing.addString(Constants.SPORTS_DISTANCE_KEY, "=3");
+                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.SPORTS_UUID, outgoing);
+            }
+
+        }, 5000L);
+
 
 
 //
