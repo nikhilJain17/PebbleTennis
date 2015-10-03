@@ -21,4 +21,13 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    // pebble libwawy
+    compile 'com.getpebble:pebblekit:3.0.0'
+
+}
+
+// more pebble stuff
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/groups/public/" }
 }
