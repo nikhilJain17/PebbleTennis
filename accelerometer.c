@@ -6,7 +6,9 @@
 
 #include <pebble.h>
 
+// if false, only shows "x is positive, etc"
 #define TAP_NOT_DATA false
+#define UUID 3abfe0f2-8bdd-4a64-ab53-001ae2c26cf8
 
 static Window *s_main_window;
 static TextLayer *s_output_layer;
