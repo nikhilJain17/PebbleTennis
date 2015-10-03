@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -33,6 +34,12 @@ public class MainActivity extends Activity {
     private UUID accelUUID = UUID.fromString("3abfe0f2-8bdd-4a64-ab53-001ae2c26cf8");
 
 
+    // datalog receiver for my custom datum
+    PebbleKit.PebbleDataLogReceiver dataloggingReceiver;
+
+
+
+
 
 
     @Override
@@ -51,71 +58,51 @@ public class MainActivity extends Activity {
         boolean isConnected = PebbleKit.isWatchConnected(this);
         Toast.makeText(this, "Pebble " + (isConnected ? "is" : "is not") + " connected!", Toast.LENGTH_SHORT).show();
 
-
-//        // Push a notification
-//        final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
-//
-//        final Map data = new HashMap();
-//        data.put("title", "Test Message");
-//        data.put("body", "How do I have WiFi?");
-//        final JSONObject jsonData = new JSONObject(data);
-//        final String notificationData = new JSONArray().put(jsonData).toString();
-//
-//        i.putExtra("messageType", "PEBBLE_ALERT");
-//        i.putExtra("sender", "PebbleKit Android");
-//        i.putExtra("notificationData", notificationData);
-//        sendBroadcast(i);
-
-
-        // Launch the sports app
+        // Launch the app
         PebbleKit.startAppOnPebble(this, accelUUID);
 
-
         Toast.makeText(this, "Launching...", Toast.LENGTH_SHORT).show();
-//
-//// Send data 5s after launch
-//        mHandler.postDelayed(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                // Send a time and distance to the sports app
-//                PebbleDictionary outgoing = new PebbleDictionary();
-//                outgoing.addString(Constants.SPORTS_TIME_KEY, "4:20");
-//                outgoing.addString(Constants.SPORTS_DISTANCE_KEY, "=3");
-//                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.SPORTS_UUID, outgoing);
-//            }
-//
-//        }, 5000L);
+
+        if (dataloggingReceiver == null) {
+            dataloggingReceiver = new PebbleKit.PebbleDataLogReceiver(accelUUID) {
+                @Override
+                public void receiveData(Context context, UUID logUuid, Long timestamp, Long tag, int data) {
+                    super.receiveData(context, logUuid, timestamp, tag, data);
+
+                    Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
+
+                }
+            };
+        }
 
 
-
-
-
-
-
+        // Register DataLogging Receiver
+        PebbleKit.registerDataLogReceiver(this, dataloggingReceiver);
 //
 //        // Get information back from the watchapp
 //        if(mReceiver == null) {
-//            mReceiver = new PebbleKit.PebbleDataReceiver(Constants.SPORTS_UUID) {
+//            mReceiver = new PebbleKit.PebbleDataReceiver(accelUUID) {
 //
 //                @Override
 //                public void receiveData(Context context, int id, PebbleDictionary data) {
 //                    // Always ACKnowledge the last message to prevent timeouts
 //                    PebbleKit.sendAckToPebble(getApplicationContext(), id);
 //
-//                    // Get action and display
-//                    int state = data.getUnsignedIntegerAsLong(Constants.SPORTS_STATE_KEY).intValue();
-//                    Toast.makeText(getApplicationContext(),
-//                            (state == Constants.SPORTS_STATE_PAUSED ? "Resumed!" : "Paused!"), Toast.LENGTH_SHORT).show();
+//                    int mal = data.size();
+//                    Log.d("Size of datum", Integer.toString(mal));
+//
+//                    long state = data.getInteger(1);
+//                    Toast.makeText(getApplicationContext(), mal, Toast.LENGTH_SHORT).show();
 //                }
 //
 //            };
 //        }
-//
+
 //// Register the receiver to get data
-        PebbleKit.registerReceivedDataHandler(this, mReceiver);
+//        PebbleKit.registerReceivedDataHandler(this, dataloggingReceiver);
 
     }
+
 
 
 
