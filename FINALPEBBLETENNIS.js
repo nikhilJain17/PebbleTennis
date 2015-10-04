@@ -23,7 +23,7 @@ var finaly = 0;
 var finalz = 0;
 
 var main = new UI.Card({
-  title: 'Pebble.js',
+  title: 'Team BD',
   icon: 'images/menu_icon.png',
   subtitle: 'Pebble Tennis',
   body: 'Enjoy.'
@@ -31,10 +31,54 @@ var main = new UI.Card({
 
 main.show();
 
+// button listener to start the game
+main.on('click', 'up', function(e) {
+       
+     ajax(
+          {
+               url: 'http://beff0643.ngrok.io/startgame',
+               method: 'get',
+               type: 'json',
+               crossDomain: true
+          });
+     
+     // display a message saying session has started
+      var card = new UI.Card();
+       card.title('Session');
+       card.subtitle('started');
+       card.body('Good luck!');
+       card.show();
+     
+     console.log("Started new game");
+     
+});
+
+
+// button listener to end the game
+main.on('click', 'down', function(e) {
+       
+     ajax(
+          {
+               url: 'http://beff0643.ngrok.io/endgame',
+               method: 'get',
+               type: 'json',
+               crossDomain: true
+          });
+     
+       // display a message saying session has started
+      var card = new UI.Card();
+       card.title('Session');
+       card.subtitle('ended');
+       card.body('Check your phone/email!');
+       card.show();
+     
+     console.log("Ended game");
+     
+});
+
 
 
 var mallu = function() {
-     
      
      
      Accel.on('data', function(e) {
@@ -61,6 +105,9 @@ var mallu = function() {
                
                initialz += z;
                initialz = initialz / counter;
+               
+               console.log(initialx + " " + initialy);
+               
           }
           
           // from 14 to 19, get final values
@@ -73,6 +120,9 @@ var mallu = function() {
                
                finalz += z;
                finalz = finalz / counter;
+               
+               console.log(finalx + ", " + finaly + ", " + finalz);
+               
           }
           
           var averagex = sumx / counter;
@@ -85,39 +135,72 @@ var mallu = function() {
           
                var isTopspin;
                
+               var isForehand;
+               
                // topspin or slice? (for forehand)
                var deltax = finalx - initialx;
                var deltay = finaly - initialy;
-               if (deltay > 0 && deltax < 0) {
+               var deltaz = finalz - initialz;
+               
+               // detect forehand or backhand
+               if (deltax < 0) {
+                    // forehand
+                    isForehand = true;
+                    console.log("\nfOrEhAnD\n");
+                    
+                    // emit the post request
+                    ajax(
+                  {
+                    url: 'http://beff0643.ngrok.io/forehand',
+                    method: 'get',
+                    crossDomain: true
+                  });
+                    
+               }
+               
+               else if (deltax > 0) {
+                    // backhand
+                    isForehand = false;
+                    console.log("\nbAcKhAnD\n");
+                    
+                    ajax(
+                  {
+                    url: 'http://beff0643.ngrok.io/backhand',
+                    method: 'get',
+                    crossDomain: true
+                  });
+                    
+               }
+               
+               
+               
+               // detect topspin or slice
+               if (deltaz > 0 && deltax < 0 && deltay > 0) {
                     // topspin
                     isTopspin = true;
-                    console.log("\nTOPSPIN\n");
+                    console.log("\nSLICE\n");
 //                     post
                     
-                    var topspin = {topspin: "true"};
                      ajax(
                   {
-                    url: 'http://7ad27d1d.ngrok.io/topspin',
-                    method: 'post',
+                    url: 'http://beff0643.ngrok.io/topspin',
+                    method: 'get',
                     type: 'json',
-                    data: topspin,
                     crossDomain: true
                   });
                     
                     
                }
-               else if (deltax < 0 && deltay < 50){
+               else if (deltaz < 0){
                     isTopspin = false;
-                    console.log("\nSLICE\n");
+                    console.log("\ntopspin\n");
                     
-                    var slice = {slice: "true"};                    
 //                     post
                      ajax(
                   {
-                    url: 'http://7ad27d1d.ngrok.io/slice',
-                    method: 'post',
+                    url: 'http://beff0643.ngrok.io/slice',
+                    method: 'get',
                     type: 'json',
-                    data: slice,
                     crossDomain: true
                   });
                     
@@ -139,7 +222,7 @@ var mallu = function() {
                // emit the goods
                ajax(
              {
-               url: 'http://7ad27d1d.ngrok.io/coordinates',
+               url: 'http://beff0643.ngrok.io/coordinates',
                method: 'post',
                type: 'json',
                data: packet,
@@ -175,7 +258,7 @@ var accel2 = function() {
      
      console.log("accel2 is called");
      
-     setInterval(mallu, 20000);
+     setInterval(mallu, 10000);
      
      
      
