@@ -1,7 +1,7 @@
 # PebbleTennis
-Fall HackRU 2015 Project.
+`PebbleTennis` collects, processes, and presents realtime data and feedback on your Android device while playing tennis.
 
-Made by Nikhil Jain and Rishi Masand.
+## Authors
 
-
-Get realtime data and feedback on your Pebble and iOS device while playing tennis. We won 2nd Place Overall, Best Pebble Hack, Best SendGrid Hack, and Best Hardware Hack! In addition, we met Bjarne Stroustrop!
+* Rishi Masand
+* Nikhil Jain
