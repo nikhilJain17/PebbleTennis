@@ -1,8 +1,3 @@
-/**
- * Welcome to Pebble.js!
- *
- * This is where you write your app.
- */
 
 var ajax = require('ajax');
 var UI = require('ui');
